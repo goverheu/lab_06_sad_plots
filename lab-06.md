@@ -1,7 +1,7 @@
 Lab 06 - Ugly charts and Simpson’s paradox
 ================
-Insert your name here
-Insert date here
+Graham Overheu
+2/20/2026
 
 ### Load packages and data
 
