@@ -13,6 +13,40 @@ library(dsbox)
 library(mosaicData) 
 ```
 
+```{r}
+staff <- read_csv("data/instructional-staff.csv")
+```
+```{r}
+staff_long <- staff %>%
+  pivot_longer(cols = -faculty_type, names_to = "year") %>%
+  mutate(value = as.numeric(value))
+```
+
+```{r}
+staff_long %>%
+  mutate(
+    year = as.numeric(year),
+    value = as.numeric(value),
+    faculty_type = as.factor(faculty_type)
+  ) %>%
+  ggplot(aes(
+    x = year,
+    y = value,
+    group = faculty_type,
+    color = faculty_type
+  )) +
+  geom_line(size = 1) +
+  labs(
+    title = "Number of Employted Faculty Types (1975-2011)",
+    x = "Year",
+    y = "Number of Faculty",
+    color = "Faculty Type"
+  ) +
+  theme_minimal()
+```
+
+I feel as if as it is, the graph is already showing that the number of part time faculty is going up compared to other faculty types; in fact, it is the only one showing an upward trend.
+
 ### Exercise 1
 
 Remove this text, and add your answer for Exercise 1 here.
