@@ -75,7 +75,7 @@ staff_long %>%
 Other than these fixes (both of which I do not know how to implement), I
 think the graph and data visualizations look fine as they are.
 
-### Exercise 1
+### Exercise 4
 
 These data were likely obtained from an observational study. I assume
 that the researchers kept track of each individual’s life for a certain
@@ -83,22 +83,22 @@ amount of time and recorded the data accordingly. Though it does seem
 fairly unreasonable to do so for a long amount of time and for so many
 people, based on the data provided, my guess is it is observational
 
-### Exercise 2
+### Exercise 5
 
 There are 1314 observations, each of which represents one individual
 smoker.
 
-### Exercise 3
+### Exercise 6
 
 There are three variables: whether the individual is alive or dead,
 whether they were a smoker, and their age.
 
-## Exercise 4
+## Exercise 7
 
-I would that if an individual is a smoker, there health is poorer, or
-vice versa.
+I would expect that if an individual is a smoker, there health is
+poorer, or vice versa.
 
-## Exercise 5
+## Exercise 8
 
 ``` r
 ggplot(Whickham, aes(x = smoker, fill = outcome)) +
@@ -107,7 +107,7 @@ ggplot(Whickham, aes(x = smoker, fill = outcome)) +
     y = "Percentage",
     x = "Smoking Status",
     fill = "Health Outcome",
-    title = "Relationsihp Between Smoking Status and Health"
+    title = "Relationship Between Smoking Status and Health"
   ) +
   theme_minimal()
 ```
@@ -123,7 +123,7 @@ contributing factor. These results would lead you to believe smoking
 makes little difference in whether you die younger or not, but I would
 conclude that they are inaccurate regardless.
 
-## Exercise 6
+## Exercise 9
 
 ``` r
 Whickham <- Whickham %>%
@@ -136,49 +136,53 @@ Whickham <- Whickham %>%
   )
 ```
 
-## Exercise 7
+## Exercise 10
 
 ``` r
-Whickham %>%
-  ggplot(aes(x = smoker, fill = outcome)) +
+ggplot(Whickham, aes(x = smoker, fill = outcome)) +
   geom_bar(position = "fill") +
   facet_wrap(~ age_cat) +
   labs(
-    y = "Percentage",
-    x = "Smoking Status",
-    fill = "Health Outcome",
-    title = "Relationship Between Smoking and Health By Age"
+    title = "Health Outcome by Smoking Status Within Age Groups",
+    x = "Smoking Status at Base Level",
+    y = "Proportion",
+    fill = "Health Outcome"
   ) +
   theme_minimal()
 ```
 
-![](lab-06_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> As opposed to
-the previous graph, this plot seems to show that overall, individuals
-who smoked ended up having a higher death rate than those who did not.
-One possible contributing factor is that individuals who are younger are
-likely to have not died as they are generally healthier than older
-individuals, hence the 18-44 age group was skewing the data.
+![](lab-06_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> This graph
+now shows that smokers have a higher death rate than non smokers, which
+would make sense and meet my expectations. Regarding why the results
+changed, it was likely due to the age variable being added, as older
+people are much more likely to die within 20 years than younger people,
+and smokers in this data set seemed to have been younger overall.
+
+## Exercise 11
 
 ``` r
-Whickham %>%
-  count(age_cat, smoker, outcome) %>%
-  group_by(age_cat, smoker) %>%
-  mutate(prop = n / sum(n))
+plot_data <- Whickham %>%
+  count(age_cat, smoker, outcome)
 ```
 
-    ## # A tibble: 12 × 5
-    ## # Groups:   age_cat, smoker [6]
-    ##    age_cat smoker outcome     n   prop
-    ##    <chr>   <fct>  <fct>   <int>  <dbl>
-    ##  1 18-44   No     Alive     327 0.965 
-    ##  2 18-44   No     Dead       12 0.0354
-    ##  3 18-44   Yes    Alive     270 0.947 
-    ##  4 18-44   Yes    Dead       15 0.0526
-    ##  5 45-64   No     Alive     147 0.735 
-    ##  6 45-64   No     Dead       53 0.265 
-    ##  7 45-64   Yes    Alive     167 0.676 
-    ##  8 45-64   Yes    Dead       80 0.324 
-    ##  9 65+     No     Alive      28 0.145 
-    ## 10 65+     No     Dead      165 0.855 
-    ## 11 65+     Yes    Alive       6 0.12  
-    ## 12 65+     Yes    Dead       44 0.88
+``` r
+ggplot(plot_data, 
+       aes(x = 2, y = n, fill = outcome)) +
+  geom_col(color = "white") +
+  coord_polar(theta = "y") +
+  facet_wrap(~ age_cat) +
+  xlim(0.5, 2.5) +
+  theme_void() +
+  labs(
+    title = "Smoking Status and 20-Year Health Outcome by Age Group",
+    fill = "Outcome"
+  )
+```
+
+![](lab-06_files/figure-gfm/unnamed-chunk-8-1.png)<!-- --> There is a
+very low mortality rate in smokers between the ages of 18-44. This
+increases significantly in the 45-64 age group, and increases again in
+the 65+ age group. Overall, this shows that as you get older, you are
+more vulnerable to the health effects of smoking, and potentially
+suggests that if you smoke at an older age, the onset of said effects is
+much quicker.
